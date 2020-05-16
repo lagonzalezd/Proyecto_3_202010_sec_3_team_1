@@ -3,8 +3,10 @@ package model.logic;
 import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Iterator;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -213,6 +215,30 @@ public class Modelo {
     	view.printMessage("Mayor ID vertice: " + mayorIDVertice.toString());
     	view.printMessage("Total arcos: " + arcos);
     	view.printMessage("Mayor ID arco: " + mayorIDArco.getInicio() + " " + mayorIDArco.getFin());
+    }
+    
+    
+    public int req1ParteInicial(double latitud, double longitud){
+    	
+    	 Iterator alrededor = graph.adj(0).iterator();
+    	 EstacionVertice actual = (EstacionVertice)graph.getInfoVertex((Integer) alrededor.next());
+
+    	 double distancia = Haversine.distance(actual.getLatitud(), actual.getLongitud(), latitud, longitud);
+    	 double diferencia = 1000000000;
+    	 int idMasCercana = -1;
+    	 
+    	 while(alrededor.hasNext()){
+    		 actual = (EstacionVertice)graph.getInfoVertex((Integer) alrededor.next());
+    		 double distanciaActual = Haversine.distance(actual.getLatitud(), actual.getLongitud(), latitud, longitud);
+    		 if(distancia - distanciaActual < diferencia ){
+    			 diferencia = distancia - distanciaActual;
+    			 idMasCercana = actual.getId();
+    		 }
+    		 if(graph.adj(actual.getId()).iterator().hasNext()){
+    			 idMasCercana = req1ParteInicial(latitud, longitud);
+    		 }
+    	 }
+    	 return idMasCercana;
     }
 
     public void createJson() {
