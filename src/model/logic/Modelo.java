@@ -41,7 +41,7 @@ public class Modelo {
 
     public final static String rutaEstaciones = "./data/estacionpolicia.geojson";
 	private static final String GRANDE = "./data/Comparendos_DEI_2018_Bogotá_D.C.geojson";
-	private static final String PEQUENIO = "Comparendos_DEI_2018_Bogotá_D.C_small_50000_sorted.geojson";
+	private static final String PEQUENIO = "./data/Comparendos_DEI_2018_Bogotá_D.C_small_50000_sorted.geojson";
 	private String archivoActualComparendo;
 	
     private EstacionVertice vert;
@@ -146,7 +146,6 @@ public class Modelo {
                 	mayorEstacion = esta;
                 }
                 
-                
                 estaciones.add(esta);
             }
 
@@ -227,7 +226,6 @@ public class Modelo {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-
 
     }
     
