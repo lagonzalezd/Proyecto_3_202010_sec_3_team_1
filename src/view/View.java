@@ -6,10 +6,13 @@ public class View
 {
 		public void printMenu()
 		{
-			System.out.println("1. Cargar Datos");
+			System.out.println("1. Cargar todos los datos (comparendos, estaciones, malla vial)");
 			System.out.println("2. Persistir los datos en un archivo Json");
-			System.out.println("3. Leer archivo Json");
-			System.out.println("4. Cargar estaciones");
+			System.out.println("__________________PARTE INCIAL________________");
+			System.out.println("3. Vertice mas cercano");
+			System.out.println("4. Agregar informacion de los comparendos 2018");
+			System.out.println("5. Agregar informacion");
+			System.out.println("6. Adicionar malla vial");
 		}
 		
 		public void printNumEdgesAndVer(String edges, String ver){
