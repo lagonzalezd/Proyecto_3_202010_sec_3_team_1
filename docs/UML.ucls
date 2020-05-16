@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class-diagram version="1.2.4" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
+  associations="true" dependencies="false" nesting-relationships="true" router="FAN">  
+  <class id="1" language="java" name="model.data_structures.Estacion" project="Proyecto_3_202010_sec_3_team_1" 
+    file="/Proyecto_3_202010_sec_3_team_1/src/model/data_structures/Estacion.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="941" width="391" x="4" y="-348"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="2" language="java" name="model.data_structures.GrafoNoDirigido" project="Proyecto_3_202010_sec_3_team_1" 
+    file="/Proyecto_3_202010_sec_3_team_1/src/model/data_structures/GrafoNoDirigido.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="527" width="323" x="435" y="-348"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="3" language="java" name="model.data_structures.Haversine" project="Proyecto_3_202010_sec_3_team_1" 
+    file="/Proyecto_3_202010_sec_3_team_1/src/model/data_structures/Haversine.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="221" width="289" x="617" y="554"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="4" language="java" name="model.data_structures.Comparendo" project="Proyecto_3_202010_sec_3_team_1" 
+    file="/Proyecto_3_202010_sec_3_team_1/src/model/data_structures/Comparendo.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="509" width="547" x="798" y="-348"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="5" language="java" name="model.data_structures.EstacionVertice" project="Proyecto_3_202010_sec_3_team_1" 
+    file="/Proyecto_3_202010_sec_3_team_1/src/model/data_structures/EstacionVertice.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="293" width="223" x="1385" y="-348"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="6" language="java" name="model.data_structures.EstacionArco" project="Proyecto_3_202010_sec_3_team_1" 
+    file="/Proyecto_3_202010_sec_3_team_1/src/model/data_structures/EstacionArco.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="293" width="186" x="1648" y="-348"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <association id="7">    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="8" name="hav">        
+        <position height="20" width="27" x="655" y="526"/>      
+      </attribute>      
+      <multiplicity id="9" minimum="0" maximum="1">        
+        <position height="18" width="27" x="753" y="524"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="3" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="10">    
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="11" name="claseDis">        
+        <position height="20" width="58" x="741" y="483"/>      
+      </attribute>      
+      <multiplicity id="12" minimum="0" maximum="1">        
+        <position height="18" width="27" x="838" y="524"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="3" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+    sort-features="false" accessors="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true" static="true"/>    
+    <operations public="true" package="true" protected="true" private="true" static="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>
