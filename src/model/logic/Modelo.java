@@ -22,6 +22,7 @@ import model.data_structures.Estacion;
 import model.data_structures.EstacionArco;
 import model.data_structures.EstacionVertice;
 import model.data_structures.GrafoNoDirigido;
+import model.data_structures.Haversine;
 import view.View;
 
 public class Modelo {
@@ -99,8 +100,16 @@ public class Modelo {
                 String[] partes = linea.split(" ");
                 for (int i = 1; i < partes.length; i++) {
                     aarcos++;
-                    graph.addEdge(Integer.parseInt(partes[0]), Integer.parseInt(partes[i]), 0);
                     
+                    double startLat = graph.getInfoVertex(Integer.parseInt(partes[0])).getLatitud();
+                    double startLong = graph.getInfoVertex(Integer.parseInt(partes[0])).getLongitud();
+                    
+                    double endLat = graph.getInfoVertex(Integer.parseInt(partes[i])).getLatitud();
+                    double endLong = graph.getInfoVertex(Integer.parseInt(partes[i])).getLongitud();
+                                       
+                    double costo = Haversine.distance(startLat, startLong, endLat, endLong);
+                    
+                    graph.addEdge(Integer.parseInt(partes[0]), Integer.parseInt(partes[i]), costo);
                     if ( Integer.parseInt(partes[0]) > mayorIDArco.getInicio()){
                     	mayorIDArco = new EstacionArco(Integer.parseInt(partes[0]), Integer.parseInt(partes[i]), 0);
                     }
@@ -202,8 +211,8 @@ public class Modelo {
     public void reqCargartxt(int vertices, int arcos){
     	view.printMessage("Total vetices: " + vertices);
     	view.printMessage("Mayor ID vertice: " + mayorIDVertice.toString());
-    	view.printMessage("Total vetices: " + arcos);
-    	view.printMessage("Mayor ID vertice: " + mayorIDArco.getInicio() + " " + mayorIDArco.getFin());
+    	view.printMessage("Total arcos: " + arcos);
+    	view.printMessage("Mayor ID arco: " + mayorIDArco.getInicio() + " " + mayorIDArco.getFin());
     }
 
     public void createJson() {
