@@ -32,7 +32,6 @@ public class Controller {
                 case 1:
                     try {
                     	modelo.cargarComparendos();
-                    	modelo.reqCargarComparendo();
                         modelo.cargarEstaciones();
                         modelo.reqCargarEstaciones();
                         modelo.cargar();
