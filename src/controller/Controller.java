@@ -35,7 +35,6 @@ public class Controller {
                         modelo.cargarEstaciones();
                         modelo.reqCargarEstaciones();
                         modelo.cargar();
-                        
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -44,11 +43,15 @@ public class Controller {
                     modelo.createJson();
                     break;
                 case 3:
-                    modelo.readJson();
+                	view.printMessage("Ingrese la latitud");
+                	double la = lector.nextDouble();
+                	view.printMessage("Ingrese la longitud");
+                	double lo = lector.nextDouble();
+                	int cercano = modelo.req1ParteInicial(la, lo);
+                	view.printMessage("El vertice mas cercano es: " + cercano);
                     break;
 
                 case 4:
-					modelo.cargarEstaciones();
                     break;
                 default:
                     view.printMessage("--------- \n Opcion Invalida \n---------");
