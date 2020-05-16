@@ -1,5 +1,6 @@
 package model.data_structures;
 
+import javafx.scene.control.Cell;
 
 public class Estacion  {
 
@@ -125,5 +126,11 @@ public class Estacion  {
 
     public int getFECHA_C() {
         return FECHA_C;
+    }
+    
+    public String toString(){
+    	return "Object Id: " + OBJECTID + " fecha: " + FECHA_C + " identificacion: " + IDENTIFICACION + 
+    			" telefono: " + TELEFONO + " contacto: " + CONTACTO + " nombre: " + NOMBRE + " servicio: " + SERVICIO+
+    			" Celec: " + CELEC + " latitud: " + latitud + " longitud: " + longitud;
     }
 }

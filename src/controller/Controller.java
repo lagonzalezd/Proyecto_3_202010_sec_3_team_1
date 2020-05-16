@@ -31,7 +31,12 @@ public class Controller {
             switch (option) {
                 case 1:
                     try {
+                    	modelo.cargarComparendos();
+                    	modelo.reqCargarComparendo();
+                        modelo.cargarEstaciones();
+                        modelo.reqCargarEstaciones();
                         modelo.cargar();
+                        
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

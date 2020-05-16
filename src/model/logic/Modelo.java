@@ -3,7 +3,6 @@ package model.logic;
 import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -14,7 +13,11 @@ import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 
 import controller.Controller;
+import edu.princeton.cs.algs4.Bag;
+import edu.princeton.cs.algs4.MinPQ;
+import edu.princeton.cs.algs4.ResizingArrayBag;
 import javafx.beans.binding.ObjectBinding;
+import model.data_structures.Comparendo;
 import model.data_structures.Estacion;
 import model.data_structures.EstacionArco;
 import model.data_structures.EstacionVertice;
@@ -25,10 +28,22 @@ public class Modelo {
 
     private GrafoNoDirigido<Integer, EstacionVertice> graph;
 
+    private ResizingArrayBag<Estacion> estaciones;
+    private Estacion mayorEstacion;
+    
+    private ResizingArrayBag<Comparendo> comparendos;
+    private Comparendo mayorComparendo; 
+    
+    private EstacionVertice mayorIDVertice;
+    private EstacionArco mayorIDArco;
+    
     private Controller controller;
 
     public final static String rutaEstaciones = "./data/estacionpolicia.geojson";
-
+	private static final String GRANDE = "./data/Comparendos_DEI_2018_Bogotá_D.C.geojson";
+	private static final String PEQUENIO = "Comparendos_DEI_2018_Bogotá_D.C_small_50000_sorted.geojson";
+	private String archivoActualComparendo;
+	
     private EstacionVertice vert;
     private EstacionArco arc;
 
@@ -41,6 +56,10 @@ public class Modelo {
     public void cargar() throws IOException {
         int aarcos = 0;
         int avertices = 0;
+        
+        mayorIDVertice = new EstacionVertice(0,0,0);
+        mayorIDArco = new EstacionArco(0, 0, 0);
+        
         graph = new GrafoNoDirigido<>(228046);
         String rutaVertices = "./data/bogota_vertices.txt";
         String rutaArcos = "./data/bogota_arcos.txt";
@@ -56,10 +75,17 @@ public class Modelo {
                 vert = new EstacionVertice(id, longitud, latitud);
                 graph.addVertex(id, vert);
                 avertices++;
+                
+                //va sacando el mayor
+                if(id > mayorIDVertice.getId()){
+                	mayorIDVertice = vert;
+                }
+                
                 linea = lector.readLine();
             }
             lector.close();
             reader.close();
+            
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -74,6 +100,10 @@ public class Modelo {
                 for (int i = 1; i < partes.length; i++) {
                     aarcos++;
                     graph.addEdge(Integer.parseInt(partes[0]), Integer.parseInt(partes[i]), 0);
+                    
+                    if ( Integer.parseInt(partes[0]) > mayorIDArco.getInicio()){
+                    	mayorIDArco = new EstacionArco(Integer.parseInt(partes[0]), Integer.parseInt(partes[i]), 0);
+                    }
                 }
                 linea = lector.readLine();
             }
@@ -82,14 +112,15 @@ public class Modelo {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        view.printNumEdgesAndVer(avertices + "", aarcos + "");
+        reqCargartxt(avertices, aarcos);
     }
 
 
     public void cargarEstaciones() {
-        ArrayList lista = new ArrayList();
-
         JsonReader reader;
+        mayorEstacion = new Estacion(0, "", "", "", "", 0, 0, 0, "");
+        estaciones = new ResizingArrayBag<>();
+        
         try {
             reader = new JsonReader(new FileReader(rutaEstaciones));
             JsonElement elem = JsonParser.parseReader(reader);
@@ -109,18 +140,71 @@ public class Modelo {
                 String CELEC = e.getAsJsonObject().get("properties").getAsJsonObject().get("EPOCELECTR").getAsString();
 
                 Estacion esta = new Estacion(OBJECTID, FECHAIN, FECHAFIN, DESCRIPCION, DIR_SITIO, latitud, longitud, TELEFONO, CELEC);
-
-                lista.add(esta);
+                
+                //va sacando el mayor
+                if(mayorEstacion.getOBJECTID() < OBJECTID){
+                	mayorEstacion = esta;
+                }
+                
+                
+                estaciones.add(esta);
             }
 
         } catch (FileNotFoundException e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
         }
+    }
+    
+    public void cargarComparendos() {
+		//cambiar esto para cambiar de tamanio de archivos.
+		archivoActualComparendo = PEQUENIO;
+		comparendos = new ResizingArrayBag<>();
+		mayorComparendo = new Comparendo(0, "", "", "", "", "", "", "", "", 0, 0, "");
+		try
+		{
+			FileInputStream inputStream;
+			inputStream = new FileInputStream(archivoActualComparendo);
+			InputStreamReader inputStreamreader = new InputStreamReader(inputStream);
+			BufferedReader bufferedReader = new BufferedReader(inputStreamreader);
 
-        String mensaje = "OBJECTID, FECHA INICIAL, FECHA FINAL, DESCRIPCION, DIRECCION DE LA ESTACION, LATITUD, LONGITUD, TELEFONO, CORREO";
+			Json cargar =  new Gson().fromJson(bufferedReader, Json.class);
 
-        view.cargarEstaciones(lista.size(), mensaje);
+			for (int i=0; i<cargar.features.length;i++){
+				Comparendo comp = new Comparendo(cargar.features[i].properties.OBJECTID, cargar.features[i].properties.FECHA_HORA,
+						cargar.features[i].properties.MEDIO_DETECCION,cargar.features[i].properties.CLASE_VEHICULO,
+						cargar.features[i].properties.TIPO_SERVICIO,cargar.features[i].properties.INFRACCION,
+						cargar.features[i].properties.DES_INFRACCION,cargar.features[i].properties.LOCALIDAD,
+						cargar.features[i].properties.MUNICIPIO,cargar.features[i].geometry.coordinates[0],
+						cargar.features[i].geometry.coordinates[1],"OBJECTID");
+				
+				comparendos.add(comp);
+				//va sacando el mayor OBJECTID
+				if( mayorComparendo.OBJECTID < comp.OBJECTID){
+					mayorComparendo = comp;
+				}
+			}
+			reqCargarComparendo();
+		}
+		catch (Exception e)
+		{
+			e.getStackTrace();
+		}
+    }
+    
+    public void reqCargarComparendo(){
+    	view.printMessage("Total comparendos: " + comparendos.size());
+    	view.printMessage("Mayor ID comparendo: " + mayorComparendo.toString());
+    }
+    public void reqCargarEstaciones(){
+    	view.printMessage("Total estaciones: " + estaciones.size());
+    	view.printMessage("Mayor ID estacion: " + mayorEstacion.toString());
+    }
+    public void reqCargartxt(int vertices, int arcos){
+    	view.printMessage("Total vetices: " + vertices);
+    	view.printMessage("Mayor ID vertice: " + mayorIDVertice.toString());
+    	view.printMessage("Total vetices: " + arcos);
+    	view.printMessage("Mayor ID vertice: " + mayorIDArco.getInicio() + " " + mayorIDArco.getFin());
     }
 
     public void createJson() {
@@ -146,6 +230,36 @@ public class Modelo {
 
 
     }
+    
+	//clases del Json para cargar los comparendos
+
+	private static class Json{
+		String type;
+		Features[] features;
+	}
+
+	private static class Features{
+		String type;
+		Properties properties;
+		Geometry geometry;
+	}
+
+	private static class Geometry{
+		String type;
+		double[] coordinates;
+	}
+
+	private static class Properties{
+		int OBJECTID;
+		String FECHA_HORA;
+		String MEDIO_DETECCION;
+		String CLASE_VEHICULO;
+		String TIPO_SERVICIO;
+		String INFRACCION;
+		String DES_INFRACCION;
+		String LOCALIDAD;
+		String MUNICIPIO;
+	}
 
 
 }

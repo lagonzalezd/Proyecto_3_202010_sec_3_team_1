@@ -9,11 +9,13 @@ import static org.junit.Assert.*;
 
 class GrafoNoDirigidoTest {
 
-    private GrafoNoDirigido grafo;
+    @SuppressWarnings("rawtypes")
+	private GrafoNoDirigido grafo;
 
     private static int TAMANO=5;
 
-    public void setUp1()
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+	public void setUp1()
     {
         grafo = new GrafoNoDirigido(TAMANO);
         grafo.addEdge(1, 2, 3);
@@ -35,7 +37,8 @@ class GrafoNoDirigidoTest {
         assertEquals(5, grafo.E());
     }
 
-    @Test
+    @SuppressWarnings("unchecked")
+	@Test
     public void addEdge() {
         grafo.addEdge(1, 5, 4);
         assertEquals(1, grafo.E());

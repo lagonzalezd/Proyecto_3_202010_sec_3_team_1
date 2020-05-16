@@ -21,15 +21,19 @@ public class View
 		{
 			System.out.println("Los datos se guardaron en: "+path+"\n");
 		}
+		
+		public void cargarComparendos(int numeroDeComparendos){
+			System.out.println("Se cargaron " + numeroDeComparendos + "comparendos");
+		}
 
-		public void cargarEstaciones(int numEst, String mensaje)
+		public void cargarEstaciones(int numEst)
 		{
-			System.out.println("Se cargaron "+numEst+" estaciones, los datos son: "+mensaje);
+			System.out.println("Se cargaron "+numEst+" estaciones");
 		}
 		public void printMessage(String mensaje) {
 
 			System.out.println(mensaje);
-		}		
+		}
 		
 		
 }
