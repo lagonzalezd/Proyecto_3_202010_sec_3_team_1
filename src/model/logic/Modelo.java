@@ -33,20 +33,20 @@ public class Modelo {
 
     private ResizingArrayBag<Estacion> estaciones;
     private Estacion mayorEstacion;
-    
+
     private ResizingArrayBag<Comparendo> comparendos;
-    private Comparendo mayorComparendo; 
-    
+    private Comparendo mayorComparendo;
+
     private EstacionVertice mayorIDVertice;
     private EstacionArco mayorIDArco;
-    
+
     private Controller controller;
 
     public final static String rutaEstaciones = "./data/estacionpolicia.geojson";
-	private static final String GRANDE = "./data/Comparendos_DEI_2018_Bogotá_D.C.geojson";
-	private static final String PEQUENIO = "./data/Comparendos_DEI_2018_Bogotá_D.C_small_50000_sorted.geojson";
-	private String archivoActualComparendo;
-	
+    private static final String GRANDE = "./data/Comparendos_DEI_2018_Bogotï¿½_D.C.geojson";
+    private static final String PEQUENIO = "./data/Comparendos_DEI_2018_Bogotï¿½_D.C_small_50000_sorted.geojson";
+    private String archivoActualComparendo;
+
     private EstacionVertice vert;
     private EstacionArco arc;
 
@@ -59,10 +59,10 @@ public class Modelo {
     public void cargar() throws IOException {
         int aarcos = 0;
         int avertices = 0;
-        
-        mayorIDVertice = new EstacionVertice(0,0,0);
+
+        mayorIDVertice = new EstacionVertice(0, 0, 0);
         mayorIDArco = new EstacionArco(0, 0, 0);
-        
+
         graph = new GrafoNoDirigido<>(228046);
         String rutaVertices = "./data/bogota_vertices.txt";
         String rutaArcos = "./data/bogota_arcos.txt";
@@ -78,17 +78,17 @@ public class Modelo {
                 vert = new EstacionVertice(id, longitud, latitud);
                 graph.addVertex(id, vert);
                 avertices++;
-                
+
                 //va sacando el mayor
-                if(id > mayorIDVertice.getId()){
-                	mayorIDVertice = vert;
+                if (id > mayorIDVertice.getId()) {
+                    mayorIDVertice = vert;
                 }
-                
+
                 linea = lector.readLine();
             }
             lector.close();
             reader.close();
-            
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -102,18 +102,18 @@ public class Modelo {
                 String[] partes = linea.split(" ");
                 for (int i = 1; i < partes.length; i++) {
                     aarcos++;
-                    
+
                     double startLat = graph.getInfoVertex(Integer.parseInt(partes[0])).getLatitud();
                     double startLong = graph.getInfoVertex(Integer.parseInt(partes[0])).getLongitud();
-                    
+
                     double endLat = graph.getInfoVertex(Integer.parseInt(partes[i])).getLatitud();
                     double endLong = graph.getInfoVertex(Integer.parseInt(partes[i])).getLongitud();
-                                       
+
                     double costo = Haversine.distance(startLat, startLong, endLat, endLong);
-                    
+
                     graph.addEdge(Integer.parseInt(partes[0]), Integer.parseInt(partes[i]), costo);
-                    if ( Integer.parseInt(partes[0]) > mayorIDArco.getInicio()){
-                    	mayorIDArco = new EstacionArco(Integer.parseInt(partes[0]), Integer.parseInt(partes[i]), 0);
+                    if (Integer.parseInt(partes[0]) > mayorIDArco.getInicio()) {
+                        mayorIDArco = new EstacionArco(Integer.parseInt(partes[0]), Integer.parseInt(partes[i]), 0);
                     }
                 }
                 linea = lector.readLine();
@@ -131,7 +131,7 @@ public class Modelo {
         JsonReader reader;
         mayorEstacion = new Estacion(0, "", "", "", "", 0, 0, 0, "");
         estaciones = new ResizingArrayBag<>();
-        
+
         try {
             reader = new JsonReader(new FileReader(rutaEstaciones));
             JsonElement elem = JsonParser.parseReader(reader);
@@ -151,12 +151,12 @@ public class Modelo {
                 String CELEC = e.getAsJsonObject().get("properties").getAsJsonObject().get("EPOCELECTR").getAsString();
 
                 Estacion esta = new Estacion(OBJECTID, FECHAIN, FECHAFIN, DESCRIPCION, DIR_SITIO, latitud, longitud, TELEFONO, CELEC);
-                
+
                 //va sacando el mayor
-                if(mayorEstacion.getOBJECTID() < OBJECTID){
-                	mayorEstacion = esta;
+                if (mayorEstacion.getOBJECTID() < OBJECTID) {
+                    mayorEstacion = esta;
                 }
-                
+
                 estaciones.add(esta);
             }
 
@@ -165,80 +165,79 @@ public class Modelo {
             e.printStackTrace();
         }
     }
-    
+
     public void cargarComparendos() {
-		//cambiar esto para cambiar de tamanio de archivos.
-		archivoActualComparendo = PEQUENIO;
-		comparendos = new ResizingArrayBag<>();
-		mayorComparendo = new Comparendo(0, "", "", "", "", "", "", "", "", 0, 0, "");
-		try
-		{
-			FileInputStream inputStream;
-			inputStream = new FileInputStream(archivoActualComparendo);
-			InputStreamReader inputStreamreader = new InputStreamReader(inputStream);
-			BufferedReader bufferedReader = new BufferedReader(inputStreamreader);
+        //cambiar esto para cambiar de tamanio de archivos.
+        archivoActualComparendo = PEQUENIO;
+        comparendos = new ResizingArrayBag<>();
+        mayorComparendo = new Comparendo(0, "", "", "", "", "", "", "", "", 0, 0, "");
+        try {
+            FileInputStream inputStream;
+            inputStream = new FileInputStream(archivoActualComparendo);
+            InputStreamReader inputStreamreader = new InputStreamReader(inputStream);
+            BufferedReader bufferedReader = new BufferedReader(inputStreamreader);
 
-			Json cargar =  new Gson().fromJson(bufferedReader, Json.class);
+            Json cargar = new Gson().fromJson(bufferedReader, Json.class);
 
-			for (int i=0; i<cargar.features.length;i++){
-				Comparendo comp = new Comparendo(cargar.features[i].properties.OBJECTID, cargar.features[i].properties.FECHA_HORA,
-						cargar.features[i].properties.MEDIO_DETECCION,cargar.features[i].properties.CLASE_VEHICULO,
-						cargar.features[i].properties.TIPO_SERVICIO,cargar.features[i].properties.INFRACCION,
-						cargar.features[i].properties.DES_INFRACCION,cargar.features[i].properties.LOCALIDAD,
-						cargar.features[i].properties.MUNICIPIO,cargar.features[i].geometry.coordinates[0],
-						cargar.features[i].geometry.coordinates[1],"OBJECTID");
-				
-				comparendos.add(comp);
-				//va sacando el mayor OBJECTID
-				if( mayorComparendo.OBJECTID < comp.OBJECTID){
-					mayorComparendo = comp;
-				}
-			}
-			reqCargarComparendo();
-		}
-		catch (Exception e)
-		{
-			e.getStackTrace();
-		}
-    }
-    
-    public void reqCargarComparendo(){
-    	view.printMessage("Total comparendos: " + comparendos.size());
-    	view.printMessage("Mayor ID comparendo: " + mayorComparendo.toString());
-    }
-    public void reqCargarEstaciones(){
-    	view.printMessage("Total estaciones: " + estaciones.size());
-    	view.printMessage("Mayor ID estacion: " + mayorEstacion.toString());
-    }
-    public void reqCargartxt(int vertices, int arcos){
-    	view.printMessage("Total vetices: " + vertices);
-    	view.printMessage("Mayor ID vertice: " + mayorIDVertice.toString());
-    	view.printMessage("Total arcos: " + arcos);
-    	view.printMessage("Mayor ID arco: " + mayorIDArco.getInicio() + " " + mayorIDArco.getFin());
-    }
-    
-    
-    public int req1ParteInicial(double latitud, double longitud){
-    	
-    	 Iterator alrededor = graph.adj(0).iterator();
-    	 EstacionVertice actual = (EstacionVertice)graph.getInfoVertex((Integer) alrededor.next());
+            for (int i = 0; i < cargar.features.length; i++) {
+                Comparendo comp = new Comparendo(cargar.features[i].properties.OBJECTID, cargar.features[i].properties.FECHA_HORA,
+                        cargar.features[i].properties.MEDIO_DETECCION, cargar.features[i].properties.CLASE_VEHICULO,
+                        cargar.features[i].properties.TIPO_SERVICIO, cargar.features[i].properties.INFRACCION,
+                        cargar.features[i].properties.DES_INFRACCION, cargar.features[i].properties.LOCALIDAD,
+                        cargar.features[i].properties.MUNICIPIO, cargar.features[i].geometry.coordinates[0],
+                        cargar.features[i].geometry.coordinates[1], "OBJECTID");
 
-    	 double distancia = Haversine.distance(actual.getLatitud(), actual.getLongitud(), latitud, longitud);
-    	 double diferencia = 1000000000;
-    	 int idMasCercana = -1;
-    	 
-    	 while(alrededor.hasNext()){
-    		 actual = (EstacionVertice)graph.getInfoVertex((Integer) alrededor.next());
-    		 double distanciaActual = Haversine.distance(actual.getLatitud(), actual.getLongitud(), latitud, longitud);
-    		 if(distancia - distanciaActual < diferencia ){
-    			 diferencia = distancia - distanciaActual;
-    			 idMasCercana = actual.getId();
-    		 }
-    		 if(graph.adj(actual.getId()).iterator().hasNext()){
-    			 idMasCercana = req1ParteInicial(latitud, longitud);
-    		 }
-    	 }
-    	 return idMasCercana;
+                comparendos.add(comp);
+                //va sacando el mayor OBJECTID
+                if (mayorComparendo.OBJECTID < comp.OBJECTID) {
+                    mayorComparendo = comp;
+                }
+            }
+            reqCargarComparendo();
+        } catch (Exception e) {
+            e.getStackTrace();
+        }
+    }
+
+    public void reqCargarComparendo() {
+        view.printMessage("Total comparendos: " + comparendos.size());
+        view.printMessage("Mayor ID comparendo: " + mayorComparendo.toString());
+    }
+
+    public void reqCargarEstaciones() {
+        view.printMessage("Total estaciones: " + estaciones.size());
+        view.printMessage("Mayor ID estacion: " + mayorEstacion.toString());
+    }
+
+    public void reqCargartxt(int vertices, int arcos) {
+        view.printMessage("Total vetices: " + vertices);
+        view.printMessage("Mayor ID vertice: " + mayorIDVertice.toString());
+        view.printMessage("Total arcos: " + arcos);
+        view.printMessage("Mayor ID arco: " + mayorIDArco.getInicio() + " " + mayorIDArco.getFin()+"\n");
+    }
+
+
+    public int req1ParteInicial(double latitud, double longitud) {
+
+        Iterator alrededor = graph.adj(0).iterator();
+        EstacionVertice actual = (EstacionVertice) graph.getInfoVertex((Integer) alrededor.next());
+
+        double distancia = Haversine.distance(actual.getLatitud(), actual.getLongitud(), latitud, longitud);
+        double diferencia = 1000000000;
+        int idMasCercana = -1;
+
+        while (alrededor.hasNext()) {
+            actual = (EstacionVertice) graph.getInfoVertex((Integer) alrededor.next());
+            double distanciaActual = Haversine.distance(actual.getLatitud(), actual.getLongitud(), latitud, longitud);
+            if (distancia - distanciaActual < diferencia) {
+                diferencia = distancia - distanciaActual;
+                idMasCercana = actual.getId();
+            }
+            if (graph.adj(actual.getId()).iterator().hasNext()) {
+                idMasCercana = req1ParteInicial(latitud, longitud);
+            }
+        }
+        return idMasCercana;
     }
 
     public void createJson() {
@@ -263,36 +262,36 @@ public class Modelo {
         }
 
     }
-    
-	//clases del Json para cargar los comparendos
 
-	private static class Json{
-		String type;
-		Features[] features;
-	}
+    //clases del Json para cargar los comparendos
 
-	private static class Features{
-		String type;
-		Properties properties;
-		Geometry geometry;
-	}
+    private static class Json {
+        String type;
+        Features[] features;
+    }
 
-	private static class Geometry{
-		String type;
-		double[] coordinates;
-	}
+    private static class Features {
+        String type;
+        Properties properties;
+        Geometry geometry;
+    }
 
-	private static class Properties{
-		int OBJECTID;
-		String FECHA_HORA;
-		String MEDIO_DETECCION;
-		String CLASE_VEHICULO;
-		String TIPO_SERVICIO;
-		String INFRACCION;
-		String DES_INFRACCION;
-		String LOCALIDAD;
-		String MUNICIPIO;
-	}
+    private static class Geometry {
+        String type;
+        double[] coordinates;
+    }
+
+    private static class Properties {
+        int OBJECTID;
+        String FECHA_HORA;
+        String MEDIO_DETECCION;
+        String CLASE_VEHICULO;
+        String TIPO_SERVICIO;
+        String INFRACCION;
+        String DES_INFRACCION;
+        String LOCALIDAD;
+        String MUNICIPIO;
+    }
 
 
 }
