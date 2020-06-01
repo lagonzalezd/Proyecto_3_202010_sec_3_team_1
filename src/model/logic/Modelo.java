@@ -19,12 +19,7 @@ import edu.princeton.cs.algs4.Bag;
 import edu.princeton.cs.algs4.MinPQ;
 import edu.princeton.cs.algs4.ResizingArrayBag;
 import javafx.beans.binding.ObjectBinding;
-import model.data_structures.Comparendo;
-import model.data_structures.Estacion;
-import model.data_structures.EstacionArco;
-import model.data_structures.EstacionVertice;
-import model.data_structures.GrafoNoDirigido;
-import model.data_structures.Haversine;
+import model.data_structures.*;
 import view.View;
 
 public class Modelo {
@@ -34,7 +29,7 @@ public class Modelo {
     private ResizingArrayBag<Estacion> estaciones;
     private Estacion mayorEstacion;
 
-    private ResizingArrayBag<Comparendo> comparendos;
+    private Queue<Comparendo> comparendos;
     private Comparendo mayorComparendo;
 
     private EstacionVertice mayorIDVertice;
@@ -43,8 +38,7 @@ public class Modelo {
     private Controller controller;
 
     public final static String rutaEstaciones = "./data/estacionpolicia.geojson";
-    private static final String GRANDE = "./data/Comparendos_DEI_2018_Bogot�_D.C.geojson";
-    private static final String PEQUENIO = "./data/Comparendos_DEI_2018_Bogot�_D.C_small_50000_sorted.geojson";
+    private static final String COMPARENDOS = "./data/Comparendos50000.geojson";
     private String archivoActualComparendo;
 
     private EstacionVertice vert;
@@ -54,6 +48,89 @@ public class Modelo {
 
     public Modelo() {
         view = new View();
+    }
+
+    public void cargarComparendos() {
+        //cambiar esto para cambiar de tamanio de archivos.
+        archivoActualComparendo = COMPARENDOS;
+        comparendos = new Queue<>();
+        mayorComparendo = new Comparendo(0, "", "", "", "", "", "", "", "", 0, 0, "");
+        try {
+            FileInputStream inputStream;
+            inputStream = new FileInputStream(archivoActualComparendo);
+            InputStreamReader inputStreamreader = new InputStreamReader(inputStream);
+            BufferedReader bufferedReader = new BufferedReader(inputStreamreader);
+
+            Json cargar = new Gson().fromJson(bufferedReader, Json.class);
+
+            for (int i = 0; i < cargar.features.length; i++) {
+                Comparendo comp = new Comparendo(cargar.features[i].properties.OBJECTID, cargar.features[i].properties.FECHA_HORA,
+                        cargar.features[i].properties.MEDIO_DETECCION, cargar.features[i].properties.CLASE_VEHICULO,
+                        cargar.features[i].properties.TIPO_SERVICIO, cargar.features[i].properties.INFRACCION,
+                        cargar.features[i].properties.DES_INFRACCION, cargar.features[i].properties.LOCALIDAD,
+                        cargar.features[i].properties.MUNICIPIO, cargar.features[i].geometry.coordinates[0],
+                        cargar.features[i].geometry.coordinates[1], "OBJECTID");
+
+                comparendos.enqueue(comp);
+                //va sacando el mayor OBJECTID
+                if (mayorComparendo.OBJECTID < comp.OBJECTID) {
+                    mayorComparendo = comp;
+                }
+
+            }
+            view.printMessage("Total comparendos: " + comparendos.size());
+            view.printMessage("Comparendo con mayor ID: " + mayorComparendo.toString() + "\n");
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    public void cargarEstaciones() {
+        JsonReader reader;
+        mayorEstacion = new Estacion(0, "", "", "", "", 0, 0, "", "", 0, "", "");
+        estaciones = new ResizingArrayBag<>();
+
+        try {
+            reader = new JsonReader(new FileReader(rutaEstaciones));
+            JsonElement elem = JsonParser.parseReader(reader);
+            JsonArray e2 = elem.getAsJsonObject().get("features").getAsJsonArray();
+
+
+            for (JsonElement e : e2) {
+
+
+                int OBJECTID = e.getAsJsonObject().get("properties").getAsJsonObject().get("OBJECTID").getAsInt();
+                String FECHAINI = e.getAsJsonObject().get("properties").getAsJsonObject().get("EPOFECHA_INI").getAsString();
+                String FECHAFIN = e.getAsJsonObject().get("properties").getAsJsonObject().get("EPOFECHA_FIN").getAsString();
+                String DESCRIPCION = e.getAsJsonObject().get("properties").getAsJsonObject().get("EPODESCRIP").getAsString();
+                String DIR_SITIO = e.getAsJsonObject().get("properties").getAsJsonObject().get("EPODIR_SITIO").getAsString();
+                double latitud = e.getAsJsonObject().get("properties").getAsJsonObject().get("EPOLATITUD").getAsDouble();
+                double longitud = e.getAsJsonObject().get("properties").getAsJsonObject().get("EPOLONGITU").getAsDouble();
+                String SERVICIO = e.getAsJsonObject().get("properties").getAsJsonObject().get("EPOSERVICIO").getAsString();
+                String HORARIO = e.getAsJsonObject().get("properties").getAsJsonObject().get("EPOHORARIO").getAsString();
+                int TELEFONO = e.getAsJsonObject().get("properties").getAsJsonObject().get("EPOTELEFON").getAsInt();
+                String IULOCAL = e.getAsJsonObject().get("properties").getAsJsonObject().get("EPOIULOCAL").getAsString();
+                String CELEC = e.getAsJsonObject().get("properties").getAsJsonObject().get("EPOCELECTR").getAsString();
+
+                Estacion esta = new Estacion(OBJECTID, FECHAINI, FECHAFIN, DESCRIPCION, DIR_SITIO, latitud, longitud, SERVICIO, HORARIO, TELEFONO, IULOCAL, CELEC);
+
+                //va sacando el mayor
+                if (mayorEstacion.getOBJECTID() < OBJECTID) {
+                    mayorEstacion = esta;
+                }
+
+                estaciones.add(esta);
+            }
+            view.printMessage("Total estaciones: " + estaciones.size());
+            view.printMessage("Estación con mayor ID: " + mayorEstacion.toString());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void cargar() throws IOException {
@@ -124,80 +201,6 @@ public class Modelo {
             e.printStackTrace();
         }
     }
-
-
-    public void cargarEstaciones() {
-        JsonReader reader;
-        mayorEstacion = new Estacion(0, "", "", "", "", 0, 0, 0, "");
-        estaciones = new ResizingArrayBag<>();
-
-        try {
-            reader = new JsonReader(new FileReader(rutaEstaciones));
-            JsonElement elem = JsonParser.parseReader(reader);
-            JsonArray e2 = elem.getAsJsonObject().get("features").getAsJsonArray();
-
-
-            for (JsonElement e : e2) {
-
-                int OBJECTID = e.getAsJsonObject().get("properties").getAsJsonObject().get("OBJECTID").getAsInt();
-                String FECHAIN = e.getAsJsonObject().get("properties").getAsJsonObject().get("EPOFECHA_INI").getAsString();
-                String FECHAFIN = e.getAsJsonObject().get("properties").getAsJsonObject().get("EPOFECHA_FIN").getAsString();
-                String DESCRIPCION = e.getAsJsonObject().get("properties").getAsJsonObject().get("EPODESCRIP").getAsString();
-                String DIR_SITIO = e.getAsJsonObject().get("properties").getAsJsonObject().get("EPODIR_SITIO").getAsString();
-                double latitud = e.getAsJsonObject().get("properties").getAsJsonObject().get("EPOLATITUD").getAsDouble();
-                double longitud = e.getAsJsonObject().get("properties").getAsJsonObject().get("EPOLONGITU").getAsDouble();
-                int TELEFONO = e.getAsJsonObject().get("properties").getAsJsonObject().get("EPOTELEFON").getAsInt();
-                String CELEC = e.getAsJsonObject().get("properties").getAsJsonObject().get("EPOCELECTR").getAsString();
-
-                Estacion esta = new Estacion(OBJECTID, FECHAIN, FECHAFIN, DESCRIPCION, DIR_SITIO, latitud, longitud, TELEFONO, CELEC);
-
-                //va sacando el mayor
-                if (mayorEstacion.getOBJECTID() < OBJECTID) {
-                    mayorEstacion = esta;
-                }
-
-                estaciones.add(esta);
-            }
-
-        } catch (FileNotFoundException e) {
-            System.out.println(e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    public void cargarComparendos() {
-        //cambiar esto para cambiar de tamanio de archivos.
-        archivoActualComparendo = PEQUENIO;
-        comparendos = new ResizingArrayBag<>();
-        mayorComparendo = new Comparendo(0, "", "", "", "", "", "", "", "", 0, 0, "");
-        try {
-            FileInputStream inputStream;
-            inputStream = new FileInputStream(archivoActualComparendo);
-            InputStreamReader inputStreamreader = new InputStreamReader(inputStream);
-            BufferedReader bufferedReader = new BufferedReader(inputStreamreader);
-
-            Json cargar = new Gson().fromJson(bufferedReader, Json.class);
-
-            for (int i = 0; i < cargar.features.length; i++) {
-                Comparendo comp = new Comparendo(cargar.features[i].properties.OBJECTID, cargar.features[i].properties.FECHA_HORA,
-                        cargar.features[i].properties.MEDIO_DETECCION, cargar.features[i].properties.CLASE_VEHICULO,
-                        cargar.features[i].properties.TIPO_SERVICIO, cargar.features[i].properties.INFRACCION,
-                        cargar.features[i].properties.DES_INFRACCION, cargar.features[i].properties.LOCALIDAD,
-                        cargar.features[i].properties.MUNICIPIO, cargar.features[i].geometry.coordinates[0],
-                        cargar.features[i].geometry.coordinates[1], "OBJECTID");
-
-                comparendos.add(comp);
-                //va sacando el mayor OBJECTID
-                if (mayorComparendo.OBJECTID < comp.OBJECTID) {
-                    mayorComparendo = comp;
-                }
-            }
-        } catch (Exception e) {
-            e.getStackTrace();
-        }
-    }
-
-
 
 
     public int req1ParteInicial(double latitud, double longitud) {

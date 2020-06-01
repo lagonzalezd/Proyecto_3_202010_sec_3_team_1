@@ -88,9 +88,9 @@ public class Comparendo implements Comparable<Comparendo> {
 	
 	public String toString(){
 		
-		return OBJECTID + ", " + FECHA_HORA + ", " + INFRACCION + ", "
-				+ ", " + CLASE_VEHICULO + ", " + TIPO_SERVICIO + ", "
-				+ ", " + LOCALIDAD;
+		return OBJECTID + ", " + FECHA_HORA + ", " + INFRACCION
+				+ ", " + CLASE_VEHICULO + ", " + TIPO_SERVICIO
+				+ ", " + LOCALIDAD+".";
 	}
 	
 

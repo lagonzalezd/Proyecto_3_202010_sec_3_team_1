@@ -26,7 +26,9 @@ public class View
 
 
 		}
-		
+
+
+
 		public void printNumEdgesAndVer(String edges, String ver){
 			System.out.println("El numero de arcos es: " + edges);
 			System.out.println("El numero de vertices es: " + ver+"\n");

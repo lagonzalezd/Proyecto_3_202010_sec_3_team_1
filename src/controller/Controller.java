@@ -30,6 +30,9 @@ public class Controller {
             int option = lector.nextInt();
             switch (option) {
                 case 1:
+                    modelo.cargarComparendos();
+                    modelo.cargarEstaciones();
+                    modelo.readJson();
                     break;
                 case 2:
                     modelo.createJson();
