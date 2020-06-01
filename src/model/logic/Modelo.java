@@ -123,7 +123,6 @@ public class Modelo {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        reqCargartxt(avertices, aarcos);
     }
 
 
@@ -193,28 +192,12 @@ public class Modelo {
                     mayorComparendo = comp;
                 }
             }
-            reqCargarComparendo();
         } catch (Exception e) {
             e.getStackTrace();
         }
     }
 
-    public void reqCargarComparendo() {
-        view.printMessage("Total comparendos: " + comparendos.size());
-        view.printMessage("Mayor ID comparendo: " + mayorComparendo.toString());
-    }
 
-    public void reqCargarEstaciones() {
-        view.printMessage("Total estaciones: " + estaciones.size());
-        view.printMessage("Mayor ID estacion: " + mayorEstacion.toString());
-    }
-
-    public void reqCargartxt(int vertices, int arcos) {
-        view.printMessage("Total vetices: " + vertices);
-        view.printMessage("Mayor ID vertice: " + mayorIDVertice.toString());
-        view.printMessage("Total arcos: " + arcos);
-        view.printMessage("Mayor ID arco: " + mayorIDArco.getInicio() + " " + mayorIDArco.getFin()+"\n");
-    }
 
 
     public int req1ParteInicial(double latitud, double longitud) {

@@ -11,8 +11,20 @@ public class View
 			System.out.println("__________________PARTE INCIAL________________");
 			System.out.println("3. Vertice mas cercano");
 			System.out.println("4. Agregar informacion de los comparendos 2018");
-			System.out.println("5. Agregar informacion");
-			System.out.println("6. Adicionar malla vial");
+			System.out.println("5. Agregar informacion costo");
+			System.out.println("6. Adicionar estaciones");
+			System.out.println("__________________Requerimientos Parte A________________");
+			System.out.println("7. Requerimiento Parte A-1");
+			System.out.println("8. Requerimiento Parte A-2");
+			System.out.println("__________________Requerimientos Parte B________________");
+			System.out.println("9. Requerimiento Parte B-1");
+			System.out.println("10. Requerimiento Parte B-2");
+			System.out.println("__________________Requerimientos Parte C________________");
+			System.out.println("11. Requerimiento Parte C-1");
+			System.out.println("12. Requerimiento Parte C-2");
+
+
+
 		}
 		
 		public void printNumEdgesAndVer(String edges, String ver){

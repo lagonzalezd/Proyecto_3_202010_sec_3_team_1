@@ -30,14 +30,6 @@ public class Controller {
             int option = lector.nextInt();
             switch (option) {
                 case 1:
-                    try {
-                    	modelo.cargarComparendos();
-                        modelo.cargarEstaciones();
-                        modelo.reqCargarEstaciones();
-                        modelo.cargar();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
                     break;
                 case 2:
                     modelo.createJson();
@@ -53,6 +45,23 @@ public class Controller {
 
                 case 4:
                     break;
+                case 5:
+                    break;
+                case 6:
+                    break;
+                case 7:
+                    break;
+                case 8:
+                    break;
+                case 9:
+                    break;
+                case 10:
+                    break;
+                case 11:
+                    break;
+                case 12:
+                    break;
+
                 default:
                     view.printMessage("--------- \n Opcion Invalida \n---------");
                     fin = true;
