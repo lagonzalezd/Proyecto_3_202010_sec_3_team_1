@@ -8,9 +8,7 @@ import com.google.gson.stream.JsonReader;
 
 import com.teamdev.jxmaps.LatLng;
 import controller.Controller;
-import edu.princeton.cs.algs4.Edge;
 import edu.princeton.cs.algs4.ResizingArrayBag;
-import javafx.scene.shape.Arc;
 import model.data_structures.*;
 import view.Mapa;
 import view.View;
@@ -233,6 +231,30 @@ public class Modelo {
 
     }
 
+    public int req3Inicial(Arco edge) {
+        int respuesta = 0;
+
+        Queue cola = comparendos;
+
+        for (int i = 0; i < cola.size(); i++) {
+            Comparendo actual = (Comparendo) cola.dequeue();
+            double distancia1 = Haversine.distance(graph.getInfoVertex(edge.getInicio()).getLatitud(), graph.getInfoVertex(edge.getInicio()).getLongitud(),
+                    actual.latitud, actual.longitud);
+            double distancia2 = Haversine.distance(graph.getInfoVertex(edge.getFin()).getLatitud(), graph.getInfoVertex(edge.getFin()).getLongitud(),
+                    actual.latitud, actual.longitud);
+
+            if ((distancia1 > -0.03) && (distancia1 < 0.03)) {
+                respuesta++;
+            } else if ((distancia2 > -0.03) && (distancia2 < 0.03)) {
+                respuesta++;
+            }
+
+        }
+
+        return respuesta;
+
+    }
+
     public Queue colaConArcos() {
         Queue arcos = new Queue();
         try {
@@ -303,6 +325,53 @@ public class Modelo {
 
         new Mapa(edgeVerts);
 
+    }
+
+    // REQUERIMIENTO PARTE B ALEJANDRO
+
+    public GrafoNoDirigido requerimiento1B(double latitudInicial, double longitudInicial, double latitudFinal, double longitudFinal) {
+        GrafoNoDirigido respuesta = new GrafoNoDirigido<>(10000);
+        int costoComparendos = 0;
+        int costoDistancia = 0;
+
+        Vertice inicial = graph.getInfoVertex(req1Inicial(latitudInicial, longitudInicial));
+        Vertice vFinal = graph.getInfoVertex(req1Inicial(latitudFinal, longitudFinal));
+
+        respuesta.addVertex(inicial.getId(), inicial);
+        respuesta.addVertex(vFinal.getId(), vFinal);
+
+        System.out.println("El ID del vertice de inicio es: " + inicial.getId());
+        System.out.println("El ID del vertice de destino es: " + vFinal.getId());
+
+        Dijkstra DJ = new Dijkstra(graph, inicial);
+        Iterator<Arco<Integer>> ruta = DJ.pathTo(vFinal);
+
+        if (ruta != null) {
+            while (ruta.hasNext()) {
+                Arco<Integer> actual = ruta.next();
+
+                Vertice inicioActual = graph.getInfoVertex(actual.getInicio());
+                Vertice finalActual = graph.getInfoVertex(actual.getFin());
+
+                respuesta.addVertex(actual.getInicio(), inicioActual.getId());
+                respuesta.addVertex(actual.getFin(), finalActual.getId());
+                respuesta.addEdge(actual.getInicio(), actual.getFin(), actual.getCosto());
+
+                System.out.println("Siguiente paso: " + "ID: " + actual.getFin() + finalActual.toString());
+                costoComparendos += req3Inicial(actual);
+                costoDistancia += actual.getCosto();
+            }
+
+            System.out.println("Se ha llegado al destino deseado" + "---------\n");
+            System.out.println("Total de vértices del recorrido:" + respuesta.V());
+            System.out.println("Costo por comparendos: " + costoComparendos);
+            System.out.println("Costo por distancia: " + costoDistancia);
+
+        } else {
+            System.out.println("Lastimosamente no hay camino entre las dos ubicaciones deseadas");
+        }
+
+        return respuesta;
     }
 
 

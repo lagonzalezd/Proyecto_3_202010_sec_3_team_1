@@ -13,6 +13,14 @@ public class Controller {
     /* Instancia de la Vista*/
     private View view;
 
+    public static double MIN_LONGITUD = -74.094723;
+
+    public static double MIN_LATITUD = 4.597714;
+
+    public static double MAX_LONGITUD = -74.062707;
+
+    public static double MAX_LATITUD = 4.621360;
+
     public Controller() {
         view = new View();
         modelo = new Modelo();
@@ -38,12 +46,12 @@ public class Controller {
                     //modelo.createJson();
                     break;
                 case 3:
-                	view.printMessage("Ingrese la latitud");
-                	double la = lector.nextDouble();
-                	view.printMessage("Ingrese la longitud");
-                	double lo = lector.nextDouble();
-                	int cercano = modelo.req1Inicial(la, lo);
-                	view.printMessage("El vertice mas cercano es: " + cercano+"\n");
+                    view.printMessage("Ingrese la latitud");
+                    double la = lector.nextDouble();
+                    view.printMessage("Ingrese la longitud");
+                    double lo = lector.nextDouble();
+                    int cercano = modelo.req1Inicial(la, lo);
+                    view.printMessage("El vertice mas cercano es: " + cercano + "\n");
                     break;
 
                 case 4:
@@ -58,6 +66,26 @@ public class Controller {
                 case 8:
                     break;
                 case 9:
+                    view.printMessage("Ingrese la latitud inicial");
+                    double latIni = Double.parseDouble(lector.next());
+                    view.printMessage("Ingrese la longitud inicial");
+                    double longIni = Double.parseDouble(lector.next());
+                    view.printMessage("Ingrese la latitud final");
+                    double latFin = Double.parseDouble(lector.next());
+                    view.printMessage("Ingrese la longitud final");
+                    double longFin = Double.parseDouble(lector.next());
+
+                    if (latIni < MIN_LATITUD || latIni > MAX_LATITUD || longIni < MIN_LONGITUD || longIni > MAX_LONGITUD) {
+                        view.printMessage("Las coordenadas iniciales estan fuera del rango.");
+                        break;
+                    }
+
+                    if (latFin < MIN_LATITUD || latFin > MAX_LATITUD || longFin < MIN_LONGITUD || longFin > MAX_LONGITUD) {
+                        view.printMessage("Las coordenadas finales estan fuera del rango.");
+                        break;
+                    }
+
+                    modelo.requerimiento1B(latIni, longIni, latFin, longFin);
                     break;
                 case 10:
                     break;

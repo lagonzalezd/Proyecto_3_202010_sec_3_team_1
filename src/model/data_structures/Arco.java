@@ -1,6 +1,6 @@
 package model.data_structures;
 
-public class Arco {
+public class Arco<E> {
 	private int inicio;
 	private int fin;
 	private double costo;
