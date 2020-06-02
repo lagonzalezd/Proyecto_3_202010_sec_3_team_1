@@ -32,6 +32,7 @@ public class Controller {
                 case 1:
                     modelo.cargarComparendos();
                     modelo.cargarEstaciones();
+                    modelo.cargarVertices();
                     modelo.cargarGrafo();
                     break;
                 case 2:

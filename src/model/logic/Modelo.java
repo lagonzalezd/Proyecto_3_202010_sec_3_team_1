@@ -30,6 +30,7 @@ public class Modelo {
     public final static String ESTACIONES = "./data/estacionpolicia.geojson";
     private static final String COMPARENDOS = "./data/Comparendos50000.geojson";
     public final static String VERTICES = "./data/bogota_vertices.txt";
+    public final static String ARCOS = "./data/bogota_arcos.txt";
     public final static String GRAFO = "./data/grafo.json";
 
     private Vertice vert;
@@ -160,41 +161,25 @@ public class Modelo {
         cargarVertices();
 
         try {
-            JsonReader reader = new JsonReader(new FileReader(GRAFO));
-            JsonElement elem = JsonParser.parseReader(reader);
-            JsonObject e1 = elem.getAsJsonObject().get("grafo").getAsJsonObject();
-            int vertices = e1.get("V").getAsInt();
-            int arcos = e1.get("E").getAsInt();
 
-            view.printMessage("Total vertices:" + vertices);
-            view.printMessage("Vertice de mayor "+mayorIDVertice);
-            view.printMessage("Total arcos:" + arcos);
+            FileReader reader = new FileReader(ARCOS);
+            BufferedReader lector = new BufferedReader(reader);
 
+            String linea = lector.readLine();
+            while (linea != null) {
+                String[] partes = linea.split(" ");
+                for (int i = 1; i < partes.length; i++) {
 
+                    Vertice desde = graph.getInfoVertex(Integer.parseInt(partes[0]));
+                    Vertice hacia = graph.getInfoVertex(Integer.parseInt(partes[i]));
+                    double costo = Haversine.distance(desde.getLatitud(), desde.getLongitud(), hacia.getLatitud(), hacia.getLongitud());
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        try {
-            JsonReader lector = new JsonReader(new FileReader(GRAFO));
-            JsonElement elem = JsonParser.parseReader(lector);
-
-            JsonObject graf = elem.getAsJsonObject().get("grafo").getAsJsonObject();
-            JsonArray e2 = graf.getAsJsonObject().get("adj").getAsJsonArray();
-
-            for( JsonElement e : e2)
-            {
-                int ar1 = e.getAsJsonObject().get("first").getAsJsonObject().get("item").getAsJsonObject().get("v").getAsInt();
-                int ar2 = e.getAsJsonObject().get("first").getAsJsonObject().get("item").getAsJsonObject().get("w").getAsInt();
-                double ar3 = e.getAsJsonObject().get("first").getAsJsonObject().get("item").getAsJsonObject().get("weight").getAsDouble();
-
-                view.printMessage(" "+ar1+" "+ar2+" "+ar3);
-
-
+                    graph.addEdge(Integer.parseInt(partes[0]), Integer.parseInt(partes[i]), costo);
+                }
+                linea = lector.readLine();
             }
-
-
+            reader.close();
+            lector.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -239,23 +224,23 @@ public class Modelo {
 
     //clases del Json para cargar los comparendos
 
-    private static class Json {
+    private static class Json{
         String type;
         Features[] features;
     }
 
-    private static class Features {
+    private static class Features{
         String type;
         Properties properties;
         Geometry geometry;
     }
 
-    private static class Geometry {
+    private static class Geometry{
         String type;
         double[] coordinates;
     }
 
-    private static class Properties {
+    private static class Properties{
         int OBJECTID;
         String FECHA_HORA;
         String MEDIO_DETECCION;
@@ -266,6 +251,5 @@ public class Modelo {
         String LOCALIDAD;
         String MUNICIPIO;
     }
-
 
 }
