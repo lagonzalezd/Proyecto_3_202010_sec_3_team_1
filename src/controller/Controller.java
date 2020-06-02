@@ -1,6 +1,5 @@
 package controller;
 
-import java.io.IOException;
 import java.util.Scanner;
 
 import model.logic.Modelo;
@@ -30,29 +29,43 @@ public class Controller {
             int option = lector.nextInt();
             switch (option) {
                 case 1:
-                    try {
-                    	modelo.cargarComparendos();
-                        modelo.cargarEstaciones();
-                        modelo.reqCargarEstaciones();
-                        modelo.cargar();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    modelo.cargarComparendos();
+                    modelo.cargarEstaciones();
+                    modelo.cargarVertices();
+                    modelo.cargarGrafo();
                     break;
                 case 2:
-                    modelo.createJson();
+                    //modelo.createJson();
                     break;
                 case 3:
                 	view.printMessage("Ingrese la latitud");
                 	double la = lector.nextDouble();
                 	view.printMessage("Ingrese la longitud");
                 	double lo = lector.nextDouble();
-                	int cercano = modelo.req1ParteInicial(la, lo);
-                	view.printMessage("El vertice mas cercano es: " + cercano);
+                	int cercano = modelo.req1Inicial(la, lo);
+                	view.printMessage("El vertice mas cercano es: " + cercano+"\n");
                     break;
 
                 case 4:
+                    modelo.mapas();
                     break;
+                case 5:
+                    break;
+                case 6:
+                    break;
+                case 7:
+                    break;
+                case 8:
+                    break;
+                case 9:
+                    break;
+                case 10:
+                    break;
+                case 11:
+                    break;
+                case 12:
+                    break;
+
                 default:
                     view.printMessage("--------- \n Opcion Invalida \n---------");
                     fin = true;

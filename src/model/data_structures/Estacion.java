@@ -2,33 +2,26 @@ package model.data_structures;
 
 import javafx.scene.control.Cell;
 
-public class Estacion  {
+public class Estacion {
 
 
     public int OBJECTID;
-    public int PLAN;
-    public int CODENT;
-    public int COD_PROY;
-    public int ANIO_GEO;
     public String FECHA_INI;
     public String FECHA_FIN;
     public String DESCRIPCION;
-    public String EST_PROY;
-    public String INTERV_ESP;
     public String DIR_SITIO;
-    public String COD_SITIO;
     public double latitud;
     public double longitud;
     public String SERVICIO;
+    public String HORARIO;
     public int TELEFONO;
+    public String IULOCAL;
     public String CELEC;
-    public String CONTACTO;
-    public String NOMBRE;
-    public String IDENTIFICACION;
-    public int FECHA_C;
 
 
-    public Estacion(int OBJECTID, String FECHA_INI, String FECHA_FIN, String DESCRIPCION, String DIR_SITIO, double latitud, double longitud, int TELEFONO, String CELEC){
+
+    public Estacion(int OBJECTID, String FECHA_INI, String FECHA_FIN, String DESCRIPCION, String DIR_SITIO, double latitud, double longitud, String SERVICIO, String HORARIO,
+                    int TELEFONO, String IULOCAL, String CELEC) {
 
         this.OBJECTID = OBJECTID;
         this.FECHA_INI = FECHA_INI;
@@ -37,29 +30,16 @@ public class Estacion  {
         this.DIR_SITIO = DIR_SITIO;
         this.latitud = latitud;
         this.longitud = longitud;
+        this.SERVICIO = SERVICIO;
+        this.HORARIO = HORARIO;
         this.TELEFONO = TELEFONO;
+        this.IULOCAL = IULOCAL;
         this.CELEC = CELEC;
 
     }
 
     public int getOBJECTID() {
         return OBJECTID;
-    }
-
-    public int getPLAN() {
-        return PLAN;
-    }
-
-    public int getCODENT() {
-        return CODENT;
-    }
-
-    public int getCOD_PROY() {
-        return COD_PROY;
-    }
-
-    public int getANIO_GEO() {
-        return ANIO_GEO;
     }
 
     public String getFECHA_INI() {
@@ -74,20 +54,8 @@ public class Estacion  {
         return DESCRIPCION;
     }
 
-    public String getEST_PROY() {
-        return EST_PROY;
-    }
-
-    public String getINTERV_ESP() {
-        return INTERV_ESP;
-    }
-
     public String getDIR_SITIO() {
         return DIR_SITIO;
-    }
-
-    public String getCOD_SITIO() {
-        return COD_SITIO;
     }
 
     public double getLatitud() {
@@ -102,35 +70,27 @@ public class Estacion  {
         return SERVICIO;
     }
 
+    public String getHORARIO() {
+        return HORARIO;
+    }
 
     public int getTELEFONO() {
         return TELEFONO;
+    }
+
+    public String getIULOCAL() {
+        return IULOCAL;
     }
 
     public String getCELEC() {
         return CELEC;
     }
 
-    public String getCONTACTO() {
-        return CONTACTO;
-    }
 
 
-    public String getNOMBRE() {
-        return NOMBRE;
-    }
-
-    public String getIDENTIFICACION() {
-        return IDENTIFICACION;
-    }
-
-    public int getFECHA_C() {
-        return FECHA_C;
-    }
-    
-    public String toString(){
-    	return "Object Id: " + OBJECTID + " fecha: " + FECHA_C + " identificacion: " + IDENTIFICACION + 
-    			" telefono: " + TELEFONO + " contacto: " + CONTACTO + " nombre: " + NOMBRE + " servicio: " + SERVICIO+
-    			" Celec: " + CELEC + " latitud: " + latitud + " longitud: " + longitud;
+    public String toString() {
+        return "Object ID: " + getOBJECTID()+", DESCRIPCION: "+getDESCRIPCION()+", Dirección: "+getDIR_SITIO()+", Latitud: "
+                +getLatitud()+", Longitud: "+getLongitud()+",\nservicio: "
+                +getSERVICIO()+",\nHorario: "+getHORARIO()+", Teléfono: "+getTELEFONO()+", IULocal: "+getIULOCAL()+"\n";
     }
 }
