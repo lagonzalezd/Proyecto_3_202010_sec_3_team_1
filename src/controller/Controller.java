@@ -32,10 +32,10 @@ public class Controller {
                 case 1:
                     modelo.cargarComparendos();
                     modelo.cargarEstaciones();
-                    modelo.readJson();
+                    modelo.cargarGrafo();
                     break;
                 case 2:
-                    modelo.createJson();
+                    //modelo.createJson();
                     break;
                 case 3:
                 	view.printMessage("Ingrese la latitud");

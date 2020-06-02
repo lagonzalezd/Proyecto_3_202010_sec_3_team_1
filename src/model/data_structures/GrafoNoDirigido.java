@@ -2,7 +2,6 @@ package model.data_structures;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import model.data_structures.EstacionVertice;
 
 import edu.princeton.cs.algs4.CC;
 import edu.princeton.cs.algs4.Edge;
@@ -116,10 +115,10 @@ public class GrafoNoDirigido<K, V> {
 		boolean encontro = false;
 		int fin = llaveAEntero.get(idVertexFin);
 		while (ini.hasNext() && !encontro){
-			EstacionArco ar = (EstacionArco) ini.next();
+			Arco ar = (Arco) ini.next();
 			if(fin == ar.getFin()){
-				EstacionVertice vinit = (EstacionVertice) llaveAInfoVertex.get(idVertexIni);
-				EstacionVertice vfin = (EstacionVertice) llaveAInfoVertex.get(idVertexFin);
+				Vertice vinit = (Vertice) llaveAInfoVertex.get(idVertexIni);
+				Vertice vfin = (Vertice) llaveAInfoVertex.get(idVertexFin);
 				double costo = hav.distance(vinit.getLatitud(), vinit.getLongitud(), vfin.getLatitud(), vfin.getLongitud());
 				ar.setCost(costo);
 			}
