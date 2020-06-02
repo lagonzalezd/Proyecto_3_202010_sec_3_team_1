@@ -25,6 +25,6 @@ public class Vertice {
 	}
 	
 	public String toString(){
-		return "ID: " + id + " latitud: " + latitud + " longitud: " + longitud;
+		return "ID: " + id + ", latitud: " + latitud + ", longitud: " + longitud;
 	}
 }

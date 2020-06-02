@@ -161,28 +161,56 @@ public class Modelo {
         cargarVertices();
 
         try {
+            JsonReader reader = new JsonReader(new FileReader(GRAFO));
+            JsonElement elem = JsonParser.parseReader(reader);
+            JsonObject e1 = elem.getAsJsonObject().get("grafo").getAsJsonObject();
+            int vertices = e1.get("V").getAsInt();
+            int arcos = e1.get("E").getAsInt();
 
+            view.printMessage("Total vertices:" + vertices);
+            view.printMessage("Vertice de mayor " + mayorIDVertice);
+            view.printMessage("Total arcos:" + arcos);
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+
+            mayorIDArco = new Arco(0, 0, 0);
             FileReader reader = new FileReader(ARCOS);
             BufferedReader lector = new BufferedReader(reader);
 
             String linea = lector.readLine();
+            linea = lector.readLine();
+            linea = lector.readLine();
+
             while (linea != null) {
                 String[] partes = linea.split(" ");
                 for (int i = 1; i < partes.length; i++) {
 
                     Vertice desde = graph.getInfoVertex(Integer.parseInt(partes[0]));
-                    Vertice hacia = graph.getInfoVertex(Integer.parseInt(partes[i]));
-                    double costo = Haversine.distance(desde.getLatitud(), desde.getLongitud(), hacia.getLatitud(), hacia.getLongitud());
+                    Vertice hasta = graph.getInfoVertex(Integer.parseInt(partes[i]));
+                    double costo = Haversine.distance(desde.getLatitud(), desde.getLongitud(), hasta.getLatitud(), hasta.getLongitud());
 
                     graph.addEdge(Integer.parseInt(partes[0]), Integer.parseInt(partes[i]), costo);
+
+                    if (mayorIDArco.getCosto() < costo) {
+                        mayorIDArco = new Arco(desde.getId(), hasta.getId(), costo);
+                    }
+
                 }
                 linea = lector.readLine();
             }
+            view.printMessage("Arco de mayor costo: " + mayorIDArco+"\n");
             reader.close();
             lector.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
     }
 
 
@@ -209,6 +237,14 @@ public class Modelo {
         return idMasCercana;
     }
 
+    public int req1(double latitud, double longitud)
+    {
+        Iterator alrededor = graph.adj(0).iterator();
+
+
+
+    }
+
 
     public void readJson() {
         Gson gson = new Gson();
@@ -224,23 +260,23 @@ public class Modelo {
 
     //clases del Json para cargar los comparendos
 
-    private static class Json{
+    private static class Json {
         String type;
         Features[] features;
     }
 
-    private static class Features{
+    private static class Features {
         String type;
         Properties properties;
         Geometry geometry;
     }
 
-    private static class Geometry{
+    private static class Geometry {
         String type;
         double[] coordinates;
     }
 
-    private static class Properties{
+    private static class Properties {
         int OBJECTID;
         String FECHA_HORA;
         String MEDIO_DETECCION;

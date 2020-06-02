@@ -25,4 +25,11 @@ public class Arco {
 	public void setCost(double nCosto) {
 		this.costo = nCosto;
 	}
+
+	public String toString()
+	{
+
+		return "ID de inicio: "+inicio+", ID de fin:"+fin+", costo:"+costo;
+	}
+
 }
